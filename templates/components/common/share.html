@@ -1,0 +1,100 @@
+{{#or theme_settings.share_custom settings.add_this.buttons}}
+    <div class="social-mediaBlock">
+        <a class="socialMedia-button" href="javascript:void(0)" aria-label="Open Share Dropdown">
+            <svg class="icon" aria-hidden="true"><use xlink:href="#icon-share"></use></svg>
+        </a>
+        <div class="socialMedia-dropdown">
+            <div class="shareLinkSocial__link">
+                <div class="shareLinkSocial__link-group">
+                    <p>{{lang 'products.copy_link'}}</p>
+                    <span class="shareLinkSocial__mutiple">
+                        <svg class="icon"><use xlink:href="#icon-mutiple"></use></svg>
+                    </span>
+                </div>
+                <input id="shareLinkSocial__copy" type="text" value="{{url}}">
+                <a href="javascript:void(0)" class="shareLinkSocial__close" aria-label="Close Popup Share">
+                    <svg class="icon" aria-hidden="true">
+                        <use xlink:href="#icon-close">
+                    </svg>
+                </a>
+            </div>
+            <p>{{lang 'products.share'}}</p>
+            {{#if settings.add_this.buttons}}
+            {{assignVar 'encodedUrl' (encodeURI url)}}
+            {{assignVar 'encodedTitle' (encodeURI head.title)}}
+            <div>
+                <ul class="socialLinks">
+                    {{#each settings.add_this.buttons}}
+                        <li class="socialLinks-item socialLinks-item--{{service}}">
+                            {{#if service '===' 'facebook'}}
+                            <a class="socialLinks__link icon icon--{{service}}"
+                               title="{{{capitalize service}}}"
+                               href="https://facebook.com/sharer/sharer.php?u={{getVar 'encodedUrl'}}"
+                               target="_blank"
+                               rel="noopener"
+                               {{{annotation}}}
+                            >
+                                <span class="aria-description--hidden">{{{capitalize service}}}</span>
+                                <svg>
+                                    <use href="#icon-facebook"/>
+                                </svg>
+                            </a>
+                            {{else if service '===' 'twitter'}}
+                            <a class="socialLinks__link icon icon--{{service}}"
+                               href="https://twitter.com/intent/tweet/?text={{getVar 'encodedTitle'}}&amp;url={{getVar 'encodedUrl'}}"
+                               target="_blank"
+                               rel="noopener"
+                               title="{{{capitalize service}}}"
+                               {{{annotation}}}
+                            >
+                                <span class="aria-description--hidden">{{{capitalize service}}}</span>
+                                <svg>
+                                    <use href="#icon-twitter"/>
+                                </svg>
+                            </a>
+                            {{else if service '===' 'linkedin'}}
+                            <a class="socialLinks__link icon icon--{{service}}"
+                               title="{{{capitalize service}}}"
+                               href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{getVar 'encodedUrl'}}&amp;title={{getVar 'encodedTitle'}}&amp;summary={{getVar 'encodedTitle'}}&amp;source={{getVar 'encodedUrl'}}"
+                               target="_blank"
+                               rel="noopener"
+                               {{{annotation}}}
+                            >
+                                <span class="aria-description--hidden">{{{capitalize service}}}</span>
+                                <svg>
+                                    <use href="#icon-linkedin"/>
+                                </svg>
+                            </a>
+                            {{else if service '===' 'pinterest'}}
+                            <a class="socialLinks__link icon icon--{{service}}"
+                               title="{{{capitalize service}}}"
+                               href="https://pinterest.com/pin/create/button/?url={{getVar 'encodedUrl'}}&amp;media={{getImageSrcset ../product.main_image (cdn ../theme_settings.default_image_product) 1x=../theme_settings.zoom_size}}&amp;description={{getVar 'encodedTitle'}}"
+                               target="_blank"
+                               rel="noopener"
+                               {{{annotation}}}
+                            >
+                                <span class="aria-description--hidden">{{{capitalize service}}}</span>
+                                <svg>
+                                    <use href="#icon-pinterest"/>
+                                </svg>
+                            </a>
+                            {{/if}}
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
+        {{#if settings.facebook_like_button.enabled}}
+            <iframe
+                class="facebook{{#if settings.facebook_like_button.verb '===' 'recommend'}}Recommend{{else}}Like{{/if}}Btn"
+                style="border:none; overflow:hidden; margin: 0; padding: 0; position:absolute"
+                src="https://www.facebook.com/plugins/like.php?href={{settings.facebook_like_button.href}}&amp;layout=button_count{{#if settings.facebook_like_button.verb '===' 'recommend'}}&amp;action=recommend{{/if}}&amp;colorscheme=light&amp;height=20"
+                scrolling="no"
+                frameborder="0"
+                allowTransparency="true">
+            </iframe>
+        {{/if}}
+        
+        </div>
+    </div>
+{{/or}}

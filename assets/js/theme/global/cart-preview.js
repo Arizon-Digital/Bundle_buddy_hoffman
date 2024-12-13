@@ -174,7 +174,6 @@ export default function (secureBaseUrl, cartId, context) {
             haloCalculateFreeShipping(context);
         });
     }
-
     // Cart Remove
     $(document).on('click','.previewCart .cart-remove', (event) => {
         const itemId = $(event.currentTarget).data('cartItemid');
@@ -196,17 +195,65 @@ export default function (secureBaseUrl, cartId, context) {
         });
         event.preventDefault();
     });
-
+    // Below function has been commented to fix the mini cart quantity issue
+    // function cartRemoveItem(itemId) {
+    //     utils.api.cart.itemRemove(itemId, (err, response) => {
+    //         if (response.data.status === 'succeed') {
+    //             refreshContent(true);
+    //         } else {
+    //             alert(response.data.errors.join('\n'));
+    //         }
+    //     });
+    // }
+    //Above cartRemoveItem function has been modified below to fix the mini cart quantity issue    
     function cartRemoveItem(itemId) {
+        console.log("Removing item from cart...");
         utils.api.cart.itemRemove(itemId, (err, response) => {
             if (response.data.status === 'succeed') {
-                refreshContent(true);
+                updateCartAndMiniCart();
             } else {
-                alert(response.data.errors.join('\n'));
+                console.error("Error removing item:", response.data.errors.join('\n'));
             }
         });
     }
-
+    // Update the mini cart quantity and refreshes mini cart content
+    function updateCartAndMiniCart() {
+        const options = { template: 'common/cart-preview' };
+        const $cartDropdown = $('#cart-preview-dropdown');
+    
+        // Fetch updated cart quantity
+        utils.api.cart.getCartQuantity({}, (err, quantity) => {
+            if (err) {
+                console.error("Error fetching cart quantity:", err);
+                return;
+            }
+            const qty = quantity || 0;
+            // Update the mini cart quantity
+            $('body').trigger('cart-quantity-update', qty);
+    
+            // Refreshes mini cart content
+            $cartDropdown.addClass('is-loading');
+            utils.api.cart.getContent(options, (err, response) => {
+                if (err) {
+                    console.error("Error refreshing mini-cart:", err);
+                    return;
+                }
+                $cartDropdown.removeClass('is-loading').html(response);
+            });
+        });
+    }
+     // Listener to handle the mini cart quantity updates
+    $('body').on('cart-quantity-update', (event, quantity) => {
+        $('.cart-quantity')
+            .text(quantity)
+            .toggleClass('countPill--positive', quantity > 0);
+    
+        if (utils.tools.storage.localStorageAvailable()) {
+            localStorage.setItem('cart-quantity', quantity);
+        }
+    });
+    // mini cart quanity issue fix ended
+   
     // Cart update
     $(document).on('click','[data-cart-update]', (event) => {
         const $target = $(event.currentTarget);

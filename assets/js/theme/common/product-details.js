@@ -890,47 +890,96 @@ export default class ProductDetails extends ProductDetailsBase {
      * @param {String} cartItemId
      * @param {Function} onComplete
      */
+    // updateCartContent(modal, cartItemId, onComplete) {
+    //     this.getCartContent(cartItemId, (err, response) => {
+    //         if (err) {
+    //             return;
+    //         }
+
+    //         modal.updateContent(response);
+
+    //         // Update cart counter
+    //         const $body = $('body');
+    //         const $cartQuantity = $('[data-cart-quantity]', modal.$content);
+    //         const $cartCounter = $('.navUser-action .cart-count');
+    //         const quantity = $cartQuantity.data('cartQuantity') || 0;
+    //         const $promotionBanner = $('[data-promotion-banner]');
+    //         const $backToShopppingBtn = $(
+    //             '.previewCartCheckout > [data-reveal-close]'
+    //         );
+    //         const $modalCloseBtn = $('#previewModal > .modal-close');
+    //         const bannerUpdateHandler = () => {
+    //             const $productContainer = $('#main-content > .container');
+
+    //             $productContainer.append(
+    //                 '<div class="loadingOverlay pdp-update"></div>'
+    //             );
+    //             $('.loadingOverlay.pdp-update', $productContainer).show();
+    //             window.location.reload();
+    //         };
+
+    //         $cartCounter.addClass('cart-count--positive');
+    //         $body.trigger('cart-quantity-update', quantity);
+
+    //         if (onComplete) {
+    //             onComplete(response);
+    //         }
+
+    //         if ($promotionBanner.length && $backToShopppingBtn.length) {
+    //             $backToShopppingBtn.on('click', bannerUpdateHandler);
+    //             $modalCloseBtn.on('click', bannerUpdateHandler);
+    //         }
+    //     });
+    // }
+   //new lines added
     updateCartContent(modal, cartItemId, onComplete) {
         this.getCartContent(cartItemId, (err, response) => {
             if (err) {
                 return;
             }
-
+    
             modal.updateContent(response);
-
+    
             // Update cart counter
             const $body = $('body');
             const $cartQuantity = $('[data-cart-quantity]', modal.$content);
             const $cartCounter = $('.navUser-action .cart-count');
-            const quantity = $cartQuantity.data('cartQuantity') || 0;
+            
+            // Ensure quantity is parsed as a number and defaults to 0 if not found
+            const quantity = parseInt($cartQuantity.data('cart-quantity') || 0, 10);
+    
+            $cartCounter.text(quantity);
+            $cartCounter.toggleClass('cart-count--positive', quantity > 0);
+            $body.trigger('cart-quantity-update', quantity);
+    
+            if (onComplete) {
+                onComplete(response);
+            }
+    
             const $promotionBanner = $('[data-promotion-banner]');
-            const $backToShopppingBtn = $(
-                '.previewCartCheckout > [data-reveal-close]'
-            );
+            const $backToShopppingBtn = $('.previewCartCheckout > [data-reveal-close]');
             const $modalCloseBtn = $('#previewModal > .modal-close');
+    
             const bannerUpdateHandler = () => {
                 const $productContainer = $('#main-content > .container');
-
+                
                 $productContainer.append(
                     '<div class="loadingOverlay pdp-update"></div>'
                 );
                 $('.loadingOverlay.pdp-update', $productContainer).show();
                 window.location.reload();
             };
-
-            $cartCounter.addClass('cart-count--positive');
-            $body.trigger('cart-quantity-update', quantity);
-
-            if (onComplete) {
-                onComplete(response);
-            }
-
+    
             if ($promotionBanner.length && $backToShopppingBtn.length) {
                 $backToShopppingBtn.on('click', bannerUpdateHandler);
                 $modalCloseBtn.on('click', bannerUpdateHandler);
             }
         });
     }
+
+    //new lines ended
+
+
 
     /**
      * Hide or mark as unavailable out of stock attributes if enabled

@@ -95,13 +95,26 @@
                                             {{/if}}
                                         </div>
                                         <div class="cart-remove-button">
-                                            {{#if can_modify}}
+                                        
+                                         {{#if can_modify}}
+                                        
+
+                                     
                                                 <a class="cart-remove icon" data-cart-itemid="{{id}}" href="#" data-confirm-delete="{{lang 'cart.confirm_delete'}}" aria-label="{{lang 'cart.remove'}}">×</a>
+                                                
                                             {{else}}
+                                           
                                                 {{#if type '==' 'GiftCertificate'}}
+                                               
+                                                
                                                     <a class="cart-remove icon" data-cart-itemid="{{id}}" href="#" data-confirm-delete="{{lang 'cart.confirm_delete'}}" aria-label="{{lang 'cart.remove'}}">×</a>
+                                                   
+                                                    
                                                 {{/if}}
+                                               
                                             {{/if}}
+                                        
+                                        
                                         </div>
                                     </div>
                                 </div>
@@ -109,7 +122,11 @@
                         </div>
                     </li>
                 {{/each}}
+                
+              
+                
             </ul>
+            
             <div data-cart-totals class="previewCartItem-totalPrice">
                 <ul class="cart-totals">
                     <li class="cart-total subtotal">
@@ -174,3 +191,4 @@
         {{/if}}
     </div>
 </div>
+
